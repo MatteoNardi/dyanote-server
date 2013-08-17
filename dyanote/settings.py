@@ -1,6 +1,8 @@
-import os
-
 # Django settings for dyanote project.
+
+import os
+PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
+
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -71,9 +73,7 @@ STATIC_URL = '/static/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
-    # Put strings here, like "/home/html/static" or "C:/www/django/static".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
+    os.path.join(os.path.dirname(PROJECT_ROOT), "static"),
 )
 
 # List of finder classes that know how to find static files in
@@ -116,6 +116,10 @@ TEMPLATE_DIRS = (
 )
 
 INSTALLED_APPS = (
+    # Local apps
+    'api',
+
+    # Django apps
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -157,6 +161,7 @@ LOGGING = {
     }
 }
 
+# Create a file called local_settings.py to override these settings.
 try:
     from local_settings import *
 except ImportError:
