@@ -73,7 +73,7 @@ STATIC_URL = '/static/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
-    os.path.join(os.path.dirname(PROJECT_ROOT), "static"),
+    os.path.join(os.path.dirname(PROJECT_ROOT), "client", "app"),
 )
 
 # List of finder classes that know how to find static files in
