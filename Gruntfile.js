@@ -1,4 +1,4 @@
-// Generated on 2013-08-31 using generator-angular 0.4.0
+// Generated on 2013-09-01 using generator-angular 0.4.0
 'use strict';
 var LIVERELOAD_PORT = 35729;
 var lrSnippet = require('connect-livereload')({ port: LIVERELOAD_PORT });
@@ -18,29 +18,17 @@ module.exports = function (grunt) {
 
   // configurable paths
   var yeomanConfig = {
-    app: 'app',
-    dist: 'dist'
+    app: 'client/app',
+    dist: 'server/dyanote/static'
   };
 
   try {
-    yeomanConfig.app = require('./bower.json').appPath || yeomanConfig.app;
+    yeomanConfig.app = require('./client/bower.json').appPath || yeomanConfig.app;
   } catch (e) {}
 
   grunt.initConfig({
     yeoman: yeomanConfig,
     watch: {
-      coffee: {
-        files: ['<%= yeoman.app %>/scripts/{,*/}*.coffee'],
-        tasks: ['coffee:dist']
-      },
-      coffeeTest: {
-        files: ['test/spec/{,*/}*.coffee'],
-        tasks: ['coffee:test']
-      },
-      compass: {
-        files: ['<%= yeoman.app %>/styles/{,*/}*.{scss,sass}'],
-        tasks: ['compass:server', 'autoprefixer']
-      },
       styles: {
         files: ['<%= yeoman.app %>/styles/{,*/}*.css'],
         tasks: ['copy:styles', 'autoprefixer']
@@ -125,57 +113,12 @@ module.exports = function (grunt) {
     },
     jshint: {
       options: {
-        jshintrc: '.jshintrc'
+        jshintrc: 'client/.jshintrc'
       },
       all: [
         'Gruntfile.js',
         '<%= yeoman.app %>/scripts/{,*/}*.js'
       ]
-    },
-    coffee: {
-      options: {
-        sourceMap: true,
-        sourceRoot: ''
-      },
-      dist: {
-        files: [{
-          expand: true,
-          cwd: '<%= yeoman.app %>/scripts',
-          src: '{,*/}*.coffee',
-          dest: '.tmp/scripts',
-          ext: '.js'
-        }]
-      },
-      test: {
-        files: [{
-          expand: true,
-          cwd: 'test/spec',
-          src: '{,*/}*.coffee',
-          dest: '.tmp/spec',
-          ext: '.js'
-        }]
-      }
-    },
-    compass: {
-      options: {
-        sassDir: '<%= yeoman.app %>/styles',
-        cssDir: '.tmp/styles',
-        generatedImagesDir: '.tmp/images/generated',
-        imagesDir: '<%= yeoman.app %>/images',
-        javascriptsDir: '<%= yeoman.app %>/scripts',
-        fontsDir: '<%= yeoman.app %>/styles/fonts',
-        importPath: '<%= yeoman.app %>/bower_components',
-        httpImagesPath: '/images',
-        httpGeneratedImagesPath: '/images/generated',
-        httpFontsPath: '/styles/fonts',
-        relativeAssets: false
-      },
-      dist: {},
-      server: {
-        options: {
-          debugInfo: true
-        }
-      }
     },
     // not used since Uglify task does concat,
     // but still available if needed
@@ -294,18 +237,15 @@ module.exports = function (grunt) {
     },
     concurrent: {
       server: [
-        'coffee:dist',
-        'compass:server',
+        //'coffee:dist',
         'copy:styles'
       ],
       test: [
-        'coffee',
-        'compass',
+        //'coffee',
         'copy:styles'
       ],
       dist: [
-        'coffee',
-        'compass:dist',
+        //'coffee',
         'copy:styles',
         'imagemin',
         'svgmin',
@@ -314,7 +254,7 @@ module.exports = function (grunt) {
     },
     karma: {
       unit: {
-        configFile: 'karma.conf.js',
+        configFile: 'client/karma.conf.js',
         singleRun: true
       }
     },
