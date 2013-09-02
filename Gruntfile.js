@@ -22,10 +22,6 @@ module.exports = function (grunt) {
     dist: 'server/dyanote/static'
   };
 
-  try {
-    yeomanConfig.app = require('./client/bower.json').appPath || yeomanConfig.app;
-  } catch (e) {}
-
   grunt.initConfig({
     yeoman: yeomanConfig,
     watch: {
