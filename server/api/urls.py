@@ -6,23 +6,23 @@ from api import views
 
 # API endpoints
 urlpatterns = format_suffix_patterns(patterns('api.views',
+
     url(r'^$', 'api_root'),
-    url(r'^pages/$',
-        views.PageList.as_view(),
-        name='page-list'),
-    url(r'^pages/(?P<pk>[0-9]+)/$',
-        views.PageDetail.as_view(),
-        name='page-detail'),
     url(r'^users/$',
         views.UserList.as_view(),
         name='user-list'),
     url(r'^users/(?P<pk>[0-9]+)/$',
         views.UserDetail.as_view(),
-        name='user-detail')
+        name='user-detail'),
+    url(r'^users/(?P<user>[0-9]+)/pages/$',
+        views.PageList.as_view(),
+        name='page-list'),
+    url(r'^users/(?P<user>[0-9]+)/pages/(?P<pk>[0-9]+)/$',
+        views.PageDetail.as_view(),
+        name='page-detail'),
 ))
 
 # Login and logout views for the browsable API
 urlpatterns += patterns('',    
-    url(r'^api-auth/', include('rest_framework.urls',
-                               namespace='rest_framework')),
+    url(r'^oauth2/', include('provider.oauth2.urls', namespace='oauth2')),
 )

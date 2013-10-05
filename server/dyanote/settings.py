@@ -132,7 +132,16 @@ INSTALLED_APPS = (
 
     # We use Django Rest Framework for our REST api.
     'rest_framework',
+    # We use OAuth2 for authentication
+    'provider',
+    'provider.oauth2'
 )
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.OAuth2Authentication',
+    )
+}
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
@@ -162,6 +171,7 @@ LOGGING = {
         },
     }
 }
+
 
 # Create a file called local_settings.py to override these settings.
 try:
