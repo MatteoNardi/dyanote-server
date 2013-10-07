@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from rest_framework import permissions
 
 
@@ -10,7 +11,7 @@ class IsOwner(permissions.BasePermission):
 
     def has_permission(self, request, view):
         try:
-            user = User.objects.get(pk=self.kwargs['user'])
+            user = User.objects.get(username=view.kwargs['username'])
         except User.DoesNotExist:
             return False
         

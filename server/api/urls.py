@@ -6,18 +6,17 @@ from api import views
 
 # API endpoints
 urlpatterns = format_suffix_patterns(patterns('api.views',
-
     url(r'^$', 'api_root'),
     url(r'^users/$',
         views.UserList.as_view(),
         name='user-list'),
-    url(r'^users/(?P<pk>[0-9]+)/$',
+    url(r'^users/(?P<username>\w+)/$',
         views.UserDetail.as_view(),
         name='user-detail'),
-    url(r'^users/(?P<user>[0-9]+)/pages/$',
+    url(r'^users/(?P<username>\w+)/pages/$',
         views.PageList.as_view(),
         name='page-list'),
-    url(r'^users/(?P<user>[0-9]+)/pages/(?P<pk>[0-9]+)/$',
+    url(r'^users/(?P<username>\w+)/pages/(?P<pk>[0-9]+)/$',
         views.PageDetail.as_view(),
         name='page-detail'),
 ))

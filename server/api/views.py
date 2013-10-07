@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.shortcuts import get_object_or_404
 from rest_framework import mixins
 from rest_framework import generics
 from rest_framework import renderers
@@ -16,7 +17,6 @@ from api.permissions import IsOwner
 def api_root(request, format=None):
     return Response({
         'users': reverse('user-list', request=request, format=format),
-        'pages': reverse('page-list', request=request, format=format)
     })
 
 
@@ -36,6 +36,9 @@ class UserDetail(generics.RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = (permissions.IsAdminUser,)
+
+    def get_object(self):
+        return get_object_or_404(User, username=self.kwargs['username'])
 
 
 class PageList(generics.ListCreateAPIView):
