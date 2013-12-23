@@ -10,7 +10,7 @@ from rest_framework.reverse import reverse
 
 from api.models import Page
 from api.serializers import UserSerializer, PageSerializer
-from api.permissions import IsOwner
+from api.permissions import IsOwnerOrAdmin
 
 
 @api_view(('GET',))
@@ -24,10 +24,14 @@ class UserList(generics.ListAPIView):
     """
     API endpoint that allows users to be listed.
     """
-    queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = (permissions.IsAdminUser,)
+    permission_classes = (permissions.IsAuthenticated,)
 
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_superuser:
+            return User.objects.all()
+        return [user,]
 
 class UserDetail(generics.RetrieveAPIView):
     """
@@ -35,7 +39,7 @@ class UserDetail(generics.RetrieveAPIView):
     """
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = (permissions.IsAdminUser,)
+    permission_classes = (permissions.IsAuthenticated, IsOwnerOrAdmin)
 
     def get_object(self):
         return get_object_or_404(User, username=self.kwargs['username'])
@@ -46,10 +50,12 @@ class PageList(generics.ListCreateAPIView):
     API endpoint that allows pages to be listed and created.
     """
     serializer_class = PageSerializer
-    permission_classes = (permissions.IsAuthenticated, IsOwner)
+    permission_classes = (permissions.IsAuthenticated, IsOwnerOrAdmin)
 
     def get_queryset(self):
         user = self.request.user
+        if user.is_superuser:
+            return Page.objects.all()
         return Page.objects.filter(author=user)
 
     def pre_save(self, obj):
@@ -61,10 +67,12 @@ class PageDetail(generics.RetrieveUpdateDestroyAPIView):
     API endpoint that allows pages to be viewed, updated and deleted.
     """
     serializer_class = PageSerializer
-    permission_classes = (permissions.IsAuthenticated, IsOwner)
+    permission_classes = (permissions.IsAuthenticated, IsOwnerOrAdmin)
 
     def get_queryset(self):
         user = self.request.user
+        if request.user.is_superuser:
+            return Page.objects.all()
         return Page.objects.filter(author=user)
 
     def pre_save(self, obj):
