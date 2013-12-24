@@ -71,7 +71,7 @@ class PageDetail(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        if request.user.is_superuser:
+        if user.is_superuser:
             return Page.objects.all()
         return Page.objects.filter(author=user)
 
