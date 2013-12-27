@@ -10,6 +10,7 @@ class IsOwnerOrAdmin(permissions.BasePermission):
         return request.user.is_superuser or obj == request.user or obj.author == request.user or request.user.is_superuser
 
     def has_permission(self, request, view):
+        # Allow access only if the username inside the url matches the authenticated user
         try:
             user = User.objects.get(username=view.kwargs['username'])
         except User.DoesNotExist:

@@ -29,9 +29,20 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         lookup_field='username'
 
 
-class PageSerializer(serializers.HyperlinkedModelSerializer):
+class SimplePageSerializer(serializers.HyperlinkedModelSerializer):
     url = PageIdentityField(view_name='page-detail')
-    author = serializers.Field(source='author.username')
+    author = serializers.HyperlinkedRelatedField(view_name='user-detail', read_only=True,
+                                                 lookup_field='username')
+
+    class Meta:
+        model = Page
+        fields = ('url', 'id', 'created', 'title', 'author')
+
+
+class FullPageSerializer(serializers.HyperlinkedModelSerializer):
+    url = PageIdentityField(view_name='page-detail')
+    author = serializers.HyperlinkedRelatedField(view_name='user-detail', read_only=True,
+                                                 lookup_field='username')
 
     class Meta:
         model = Page
