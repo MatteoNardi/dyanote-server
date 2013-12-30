@@ -55,7 +55,7 @@ class PageList(generics.ListCreateAPIView):
     def get_queryset(self):
         user = self.request.user
         if user.is_superuser:
-            return Page.objects.all()
+            user = User.objects.get(username=self.kwargs['username'])
         return Page.objects.filter(author=user)
 
     def pre_save(self, obj):
