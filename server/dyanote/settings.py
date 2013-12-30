@@ -134,7 +134,9 @@ INSTALLED_APPS = (
     'rest_framework',
     # We use OAuth2 for authentication
     'provider',
-    'provider.oauth2'
+    'provider.oauth2',
+    # Migrations support
+    'south'
 )
 
 REST_FRAMEWORK = {
