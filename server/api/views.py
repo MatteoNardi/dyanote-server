@@ -9,7 +9,7 @@ from rest_framework.response import Response
 from rest_framework.reverse import reverse
 
 from api.models import Page
-from api.serializers import UserSerializer, SimplePageSerializer, FullPageSerializer
+from api.serializers import UserSerializer, PageSerializer
 from api.permissions import IsOwnerOrAdmin
 
 
@@ -49,7 +49,7 @@ class PageList(generics.ListCreateAPIView):
     """
     API endpoint that allows pages to be listed and created.
     """
-    serializer_class = SimplePageSerializer
+    serializer_class = PageSerializer
     permission_classes = (permissions.IsAuthenticated, IsOwnerOrAdmin)
 
     def get_queryset(self):
@@ -66,7 +66,7 @@ class PageDetail(generics.RetrieveUpdateDestroyAPIView):
     """
     API endpoint that allows pages to be viewed, updated and deleted.
     """
-    serializer_class = FullPageSerializer
+    serializer_class = PageSerializer
     permission_classes = (permissions.IsAuthenticated, IsOwnerOrAdmin)
 
     def get_queryset(self):
