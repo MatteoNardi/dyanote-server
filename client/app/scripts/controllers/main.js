@@ -1,10 +1,7 @@
 'use strict';
 
-angular.module('clientApp')
+angular.module('dyanote')
   .controller('MainCtrl', function ($scope) {
-    $scope.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
+    $scope.isLogged = true;
+    $scope.username = "Matteo Nardi";
   });

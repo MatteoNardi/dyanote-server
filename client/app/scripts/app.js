@@ -1,15 +1,15 @@
 'use strict';
 
-angular.module('clientApp', ['ngRoute'])
+angular.module('dyanote', ['ngRoute'])
   .config(function ($routeProvider) {
     $routeProvider
-      .when('/', {
-        templateUrl: 'views/main.html',
-        controller: 'MainCtrl'
-      })
       .when('/login', {
         templateUrl: 'views/login.html',
         controller: 'LoginCtrl'
+      })
+      .when('/logout', {
+        templateUrl: 'views/logout.html',
+        controller: 'LogoutCtrl'
       })
       .when('/register', {
         templateUrl: 'views/register.html',
@@ -20,6 +20,10 @@ angular.module('clientApp', ['ngRoute'])
         controller: 'NotesCtrl'
       })
       .otherwise({
-        redirectTo: '/'
+        redirectTo: '/login'
       });
+  })
+
+  .config(function ($locationProvider) {
+    $locationProvider.html5Mode(true);
   });

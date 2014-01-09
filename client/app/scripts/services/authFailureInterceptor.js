@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('clientApp')
+angular.module('dyanote')
 
 // authFailureInterceptor is an interceptor we add to $http.
 // Every time it detects a "401 Unauthorized" response from the server,

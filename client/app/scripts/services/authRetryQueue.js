@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('clientApp')
+angular.module('dyanote')
 
 // authRetryQueue is a generic retry queue for security failures.
 // Each item is expected to expose two functions: retry and cancel.

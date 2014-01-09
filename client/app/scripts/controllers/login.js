@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('clientApp')
+angular.module('dyanote')
   .controller('LoginCtrl', function ($scope) {
     $scope.awesomeThings = [
       'HTML5 Boilerplate',
