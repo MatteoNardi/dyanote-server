@@ -7,6 +7,10 @@ angular.module('clientApp', ['ngRoute'])
         templateUrl: 'views/main.html',
         controller: 'MainCtrl'
       })
+      .when('/asd/', {
+        templateUrl: 'views/header.html',
+        controller: 'MainCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });
