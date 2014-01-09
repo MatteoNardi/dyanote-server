@@ -1,1 +1,1 @@
-web: gunicorn --chdir server dyanote.wsgi
+web: gunicorn dyanote.wsgi

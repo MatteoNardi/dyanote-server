@@ -1,4 +1,6 @@
-node_modules
-dist
-.tmp
-.env
+*.log
+*.pot
+*.pyc
+local_settings.py
+venv
+dyanote/static
