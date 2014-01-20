@@ -28,6 +28,9 @@ class PageRelatedField(relations.HyperlinkedRelatedField):
         return queryset.get(author__username=username, id=id)
 
 
+class NewUserSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    password = serializers.CharField(max_length=100)
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     pages = serializers.HyperlinkedIdentityField(
@@ -47,7 +50,15 @@ class PageSerializer(serializers.HyperlinkedModelSerializer):
     author = serializers.HyperlinkedRelatedField(view_name='user-detail', read_only=True,
                                                  lookup_field='username')
     parent = PageRelatedField(view_name='page-detail')
+    flags = serializers.SerializerMethodField('get_flags')
 
     class Meta:
         model = Page
-        fields = ('url', 'id', 'parent', 'created', 'title', 'body', 'author')
+        fields = ('url', 'id', 'parent', 'created', 'title', 'body', 'author', 'flags')
+
+    def get_flags(self, obj):
+        return {
+            Page.NORMAL: [],
+            Page.ROOT: ['root'],
+            Page.TRASH: ['trash'],
+        }[obj.flags]

@@ -7,6 +7,7 @@ from api import views
 # API endpoints
 urlpatterns = format_suffix_patterns(patterns('api.views',
     url(r'^$', 'api_root'),
+    url(r'^register_user/$', 'register_user', name='register-user'),
     url(r'^users/$',
         views.UserList.as_view(),
         name='user-list'),
