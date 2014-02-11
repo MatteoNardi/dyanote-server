@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.exceptions import ValidationError
 
 class Page(models.Model):
     """A Page in Dyanote."""
@@ -10,13 +11,18 @@ class Page(models.Model):
 
     NORMAL = 0
     ROOT = 1
-    TRASH = 2
+    ARCHIVE = 2
     FLAGS = (
         (NORMAL, 'Normal page'),
         (ROOT, 'Root page'),
-        (TRASH, 'Trash page'),
+        (ARCHIVE, 'Archive page'),
     )
     flags = models.IntegerField(choices=FLAGS, default=NORMAL)
 
     class Meta:
         ordering = ('created',)
+
+    def clean(self):
+        if self.parent is None and self.flags is Page.NORMAL:
+            raise ValidationError("Parent is required in normal pages.")
+

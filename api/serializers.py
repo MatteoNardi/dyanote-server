@@ -49,7 +49,7 @@ class PageSerializer(serializers.HyperlinkedModelSerializer):
     url = PageIdentityField(view_name='page-detail')
     author = serializers.HyperlinkedRelatedField(view_name='user-detail', read_only=True,
                                                  lookup_field='username')
-    parent = PageRelatedField(view_name='page-detail')
+    parent = PageRelatedField(view_name='page-detail', required=False)
     flags = serializers.SerializerMethodField('get_flags')
 
     class Meta:
@@ -60,5 +60,6 @@ class PageSerializer(serializers.HyperlinkedModelSerializer):
         return {
             Page.NORMAL: [],
             Page.ROOT: ['root'],
-            Page.TRASH: ['trash'],
+            Page.ARCHIVE: ['archive'],
         }[obj.flags]
+
