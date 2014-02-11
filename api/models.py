@@ -18,6 +18,5 @@ class Page(models.Model):
     )
     flags = models.IntegerField(choices=FLAGS, default=NORMAL)
 
-
     class Meta:
         ordering = ('created',)
