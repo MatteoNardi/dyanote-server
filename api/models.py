@@ -2,7 +2,7 @@ from django.db import models
 from django.core.exceptions import ValidationError
 
 class Page(models.Model):
-    """A Page in Dyanote."""
+    """A Page (or note) in Dyanote."""
     created = models.DateTimeField(auto_now_add=True)
     title = models.CharField(max_length=100, default='')
     parent = models.ForeignKey('api.Page', null=True, blank=True, related_name='children')
@@ -26,3 +26,8 @@ class Page(models.Model):
         if self.parent is None and self.flags is Page.NORMAL:
             raise ValidationError("Parent is required in normal pages.")
 
+
+class ActivationKey(models.Model):
+    """ Activation Keys for new users """
+    user = models.OneToOneField('auth.User', unique=True)
+    key = models.CharField(max_length=40)
