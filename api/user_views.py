@@ -13,8 +13,9 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from api.permissions import IsOwnerOrAdmin
-from api.serializers import UserSerializer, PageSerializer, NewUserSerializer
+from api.serializers import UserSerializer, NewUserSerializer, PasswordSerializer
 from api.models import ActivationKey
+from api.utils import mail_user
 
 class UserDetail(generics.RetrieveAPIView):
     """
@@ -60,7 +61,8 @@ class ListCreateUsers(APIView):
         user.is_active = False
         user.save()
         activation_key = create_activation_key(user)
-        send_activation_mail(user, activation_key)
+        mail_user(user, 'Welcome to Dyanote', 
+            'api/activation_email.txt', key=activation_key.key)
 
         return Response(serialized.data, status=status.HTTP_201_CREATED)
 
@@ -74,16 +76,8 @@ def create_activation_key(user):
     return ActivationKey.objects.create(user=user, key=activation_key)
 
 
-def send_activation_mail(user, activation_key):
-    msg = render_to_string('api/activation_email.txt', {
-        "activation_key": activation_key.key,
-        "email": user
-    })
-    send_mail('Welcome to Dyanote', msg, 'Dyanote founder', [user.email])
-
-
 @api_view(('GET',))
-def activate(request, username, format=None):
+def activate(request, username):
     """ Activate a user after registration """
     email = self.kwargs.get('username', '')
     key = request.QUERY_PARAMS.get('key', '')
@@ -96,3 +90,36 @@ def activate(request, username, format=None):
         return Response(tpl, status=status.HTTP_200_OK)
     except ActivationKey.DoesNotExist:
         redirect('https://dyanote.com')
+
+
+class UpdateResetPassword(APIView):
+    def put(self, request, format=None):
+        """ Change password """
+        if not request.successful_authenticator:
+            raise exceptions.NotAuthenticated()
+
+        if request.user.email != self.kwargs.get('email'):
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+        password = PasswordSerializer(data=request.DATA)
+        if not password.is_valid():
+            return Response(password._errors, status=status.HTTP_400_BAD_REQUEST)
+
+        if not request.user.check_password(password.old):
+            return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
+
+        request.user.set_password(password.new)
+        request.user.save()
+
+    def delete(self, request, format=None):
+        """ Reset password """
+        try:
+            user = User.objects.get(email=kwargs['email'])
+            password = User.objects.make_random_password()
+            user.set_password(password)
+            user.save()
+            mail_user(user, 'New Dyanote password',
+                'api/new_password.txt', password=password)
+
+        except User.DoesNotExist:
+            return Response(status=status.HTTP_400_BAD_REQUEST) 

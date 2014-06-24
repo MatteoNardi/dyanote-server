@@ -43,7 +43,9 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('url', 'username', 'email', 'pages')
         lookup_field='username'
 
-
+class PasswordSerializer(serializers.Serializer):
+    old = serializers.CharField(max_length=100)
+    new = serializers.CharField(max_length=100)
 
 class PageSerializer(serializers.HyperlinkedModelSerializer):
     url = PageIdentityField(view_name='page-detail')
