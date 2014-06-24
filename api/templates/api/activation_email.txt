@@ -1,1 +1,3 @@
-Key: {{ activation_key }}
+Welcome to Dyanote, your personal hypertext.
+To activate your account, follow this link:
+https://dyanote.herokuapp.com/api/{{email}}/activate/?key={{ activation_key }}

@@ -3,6 +3,7 @@ import random
 
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
+from django.shortcuts import redirect
 from django.template.loader import render_to_string
 
 from rest_framework import generics
@@ -74,7 +75,24 @@ def create_activation_key(user):
 
 
 def send_activation_mail(user, activation_key):
-    msg = render_to_string('api/activation_email.txt', {"activation_key": activation_key.key})
+    msg = render_to_string('api/activation_email.txt', {
+        "activation_key": activation_key.key,
+        "email": user
+    })
     send_mail('Welcome to Dyanote', msg, 'Dyanote founder', [user.email])
 
 
+@api_view(('GET',))
+def activate(request, username, format=None):
+    """ Activate a user after registration """
+    email = self.kwargs.get('username', '')
+    key = request.QUERY_PARAMS.get('key', '')
+    try:
+        activation_key = ActivationKey.objects.get(user=email, key=key)
+        activation_key.user.is_active = True
+        activation_key.user.save()
+        activation_key.delete()
+        tpl = render_to_string('api/activation_succeeded.html', user=email)
+        return Response(tpl, status=status.HTTP_200_OK)
+    except ActivationKey.DoesNotExist:
+        redirect('https://dyanote.com')
