@@ -1,5 +1,6 @@
 from django.conf.urls import patterns, url, include
 from rest_framework.urlpatterns import format_suffix_patterns
+from provider.oauth2.views import AccessTokenView
 
 from api import views, user_views
 
@@ -13,6 +14,9 @@ urlpatterns = format_suffix_patterns(patterns('api.views',
     url(r'^users/(?P<username>[\w@\.]+)/$',
         user_views.UserDetail.as_view(),
         name='user-detail'),
+    url(r'^users/[\w@\.]+/login/$',
+        AccessTokenView.as_view(),
+        name='user-login'),
     url(r'^users/(?P<username>[\w@\.]+)/activate/$',
         user_views.activate,
         name='user-activate'),
@@ -26,9 +30,3 @@ urlpatterns = format_suffix_patterns(patterns('api.views',
         views.PageDetail.as_view(),
         name='page-detail'),
 ))
-
-# Login and logout views for the browsable API
-urlpatterns += patterns('',    
-    url(r'^oauth2/', include('provider.oauth2.urls', namespace='oauth2')),
-    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-)

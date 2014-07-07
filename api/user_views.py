@@ -9,6 +9,8 @@ from django.template.loader import render_to_string
 from rest_framework import generics
 from rest_framework import permissions
 from rest_framework import status
+from rest_framework import exceptions
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -123,3 +125,6 @@ class UpdateResetPassword(APIView):
 
         except User.DoesNotExist:
             return Response(status=status.HTTP_400_BAD_REQUEST) 
+
+# TODO: Create a login view which checks the username specified in the url is the same as
+# the username in the params.
