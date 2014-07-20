@@ -1,5 +1,8 @@
 from django.conf.urls import patterns, url, include
+from django.views.decorators.csrf import csrf_exempt
+
 from rest_framework.urlpatterns import format_suffix_patterns
+
 from provider.oauth2.views import AccessTokenView
 
 from api import views, user_views
@@ -15,7 +18,7 @@ urlpatterns = format_suffix_patterns(patterns('api.views',
         user_views.UserDetail.as_view(),
         name='user-detail'),
     url(r'^users/[\w@\.]+/login/$',
-        AccessTokenView.as_view(),
+        csrf_exempt(AccessTokenView.as_view()),
         name='user-login'),
     url(r'^users/(?P<username>[\w@\.]+)/activate/$',
         user_views.activate,
@@ -28,5 +31,5 @@ urlpatterns = format_suffix_patterns(patterns('api.views',
         name='page-list'),
     url(r'^users/(?P<username>[\w@\.]+)/pages/(?P<pk>[0-9]+)/$',
         views.PageDetail.as_view(),
-        name='page-detail'),
+        name='page-detail')
 ))
