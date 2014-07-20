@@ -17,7 +17,7 @@ The server side consists of a REST API which currently can be accessed at the fo
 We use OAuth2 for authenticating.
 Login with an URL encoded post request to:
 
-    POST /api/oauth2/access_token/
+    POST /api/users/user@example.com/login/
         ?client_id=CLIENT_ID          // Client ID
         &client_secret=CLIENT_SECRET  // Client Secret
         &grant_type=password
@@ -46,13 +46,13 @@ All requests requiring authentication will need the following HTTP header:
 
     POST /api/users
     {
-        email: "matteo@dyanote.com",
+        email: "user@example.com",
         password: "..."
     }
 
 Verification mail is sent.
 
-    POST /api/users/matteo@dyanote.com/
+    POST /api/users/user@example.com/
     {
         verification_code: "..."
     }
@@ -61,27 +61,27 @@ User is now activated.
 
 #### Resource
 
-    GET /api/users/matteo@dyanote.com/
+    GET /api/users/user@example.com/
 Returns
 
     {
-        "url": "https://api.dyanote.com/api/users/matteo@dyanote.com/", 
-        "username": "matteo@dyanote.com", 
-        "email": "matteo@dyanote.com", 
-        "pages": "https://api.dyanote.com/api/users/matteo@dyanote.com/pages/",
+        "url": "https://api.dyanote.com/api/users/user@example.com/", 
+        "username": "user@example.com", 
+        "email": "user@example.com", 
+        "pages": "https://api.dyanote.com/api/users/user@example.com/pages/",
         
-        "logout": "https://api.dyanote.com/api/users/matteo@dyanote.com/logout/",
-        "change_password": "https://api.dyanote.com/api/users/matteo@dyanote.com/change_password/",
-        "change_password": "https://api.dyanote.com/api/users/matteo@dyanote.com/send_password_reset/",
+        "logout": "https://api.dyanote.com/api/users/user@example.com/logout/",
+        "change_password": "https://api.dyanote.com/api/users/user@example.com/change_password/",
+        "change_password": "https://api.dyanote.com/api/users/user@example.com/send_password_reset/",
     }
 
 #### Logout
 
-    POST https://api.dyanote.com/api/users/matteo@dyanote.com/logout/
+    POST https://api.dyanote.com/api/users/user@example.com/logout/
 
 #### Change password
 
-    POST https://api.dyanote.com/api/users/matteo@dyanote.com/change_password/
+    POST https://api.dyanote.com/api/users/user@example.com/password/
     {
         old: "old password or password reset code",
         new: "new password"
@@ -89,7 +89,7 @@ Returns
 
 If the user forgot the password
 
-    POST https://api.dyanote.com/api/users/matteo@dyanote.com/send_password_reset/
+    DELETE https://api.dyanote.com/api/users/user@example.com/password/
 
 Will mail him a reset code.
 
