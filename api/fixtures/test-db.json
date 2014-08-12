@@ -1,1 +1,72 @@
-[{"pk": 1, "model": "auth.permission", "fields": {"codename": "add_page", "name": "Can add page", "content_type": 1}}, {"pk": 2, "model": "auth.permission", "fields": {"codename": "change_page", "name": "Can change page", "content_type": 1}}, {"pk": 3, "model": "auth.permission", "fields": {"codename": "delete_page", "name": "Can delete page", "content_type": 1}}, {"pk": 4, "model": "auth.permission", "fields": {"codename": "add_permission", "name": "Can add permission", "content_type": 2}}, {"pk": 5, "model": "auth.permission", "fields": {"codename": "change_permission", "name": "Can change permission", "content_type": 2}}, {"pk": 6, "model": "auth.permission", "fields": {"codename": "delete_permission", "name": "Can delete permission", "content_type": 2}}, {"pk": 7, "model": "auth.permission", "fields": {"codename": "add_group", "name": "Can add group", "content_type": 3}}, {"pk": 8, "model": "auth.permission", "fields": {"codename": "change_group", "name": "Can change group", "content_type": 3}}, {"pk": 9, "model": "auth.permission", "fields": {"codename": "delete_group", "name": "Can delete group", "content_type": 3}}, {"pk": 10, "model": "auth.permission", "fields": {"codename": "add_user", "name": "Can add user", "content_type": 4}}, {"pk": 11, "model": "auth.permission", "fields": {"codename": "change_user", "name": "Can change user", "content_type": 4}}, {"pk": 12, "model": "auth.permission", "fields": {"codename": "delete_user", "name": "Can delete user", "content_type": 4}}, {"pk": 13, "model": "auth.permission", "fields": {"codename": "add_contenttype", "name": "Can add content type", "content_type": 5}}, {"pk": 14, "model": "auth.permission", "fields": {"codename": "change_contenttype", "name": "Can change content type", "content_type": 5}}, {"pk": 15, "model": "auth.permission", "fields": {"codename": "delete_contenttype", "name": "Can delete content type", "content_type": 5}}, {"pk": 16, "model": "auth.permission", "fields": {"codename": "add_session", "name": "Can add session", "content_type": 6}}, {"pk": 17, "model": "auth.permission", "fields": {"codename": "change_session", "name": "Can change session", "content_type": 6}}, {"pk": 18, "model": "auth.permission", "fields": {"codename": "delete_session", "name": "Can delete session", "content_type": 6}}, {"pk": 19, "model": "auth.permission", "fields": {"codename": "add_site", "name": "Can add site", "content_type": 7}}, {"pk": 20, "model": "auth.permission", "fields": {"codename": "change_site", "name": "Can change site", "content_type": 7}}, {"pk": 21, "model": "auth.permission", "fields": {"codename": "delete_site", "name": "Can delete site", "content_type": 7}}, {"pk": 22, "model": "auth.permission", "fields": {"codename": "add_logentry", "name": "Can add log entry", "content_type": 8}}, {"pk": 23, "model": "auth.permission", "fields": {"codename": "change_logentry", "name": "Can change log entry", "content_type": 8}}, {"pk": 24, "model": "auth.permission", "fields": {"codename": "delete_logentry", "name": "Can delete log entry", "content_type": 8}}, {"pk": 25, "model": "auth.permission", "fields": {"codename": "add_client", "name": "Can add client", "content_type": 9}}, {"pk": 26, "model": "auth.permission", "fields": {"codename": "change_client", "name": "Can change client", "content_type": 9}}, {"pk": 27, "model": "auth.permission", "fields": {"codename": "delete_client", "name": "Can delete client", "content_type": 9}}, {"pk": 28, "model": "auth.permission", "fields": {"codename": "add_grant", "name": "Can add grant", "content_type": 10}}, {"pk": 29, "model": "auth.permission", "fields": {"codename": "change_grant", "name": "Can change grant", "content_type": 10}}, {"pk": 30, "model": "auth.permission", "fields": {"codename": "delete_grant", "name": "Can delete grant", "content_type": 10}}, {"pk": 31, "model": "auth.permission", "fields": {"codename": "add_accesstoken", "name": "Can add access token", "content_type": 11}}, {"pk": 32, "model": "auth.permission", "fields": {"codename": "change_accesstoken", "name": "Can change access token", "content_type": 11}}, {"pk": 33, "model": "auth.permission", "fields": {"codename": "delete_accesstoken", "name": "Can delete access token", "content_type": 11}}, {"pk": 34, "model": "auth.permission", "fields": {"codename": "add_refreshtoken", "name": "Can add refresh token", "content_type": 12}}, {"pk": 35, "model": "auth.permission", "fields": {"codename": "change_refreshtoken", "name": "Can change refresh token", "content_type": 12}}, {"pk": 36, "model": "auth.permission", "fields": {"codename": "delete_refreshtoken", "name": "Can delete refresh token", "content_type": 12}}, {"pk": 1, "model": "auth.user", "fields": {"username": "admin", "first_name": "", "last_name": "", "is_active": true, "is_superuser": true, "is_staff": true, "last_login": "2013-10-05T16:23:02.482Z", "groups": [], "user_permissions": [], "password": "pbkdf2_sha256$10000$9UHsCcL0IYv0$bB0dwSKxk17K7Jcf9GhIlOjMpThCqUzCHK0kGoyRKtk=", "email": "admin@dyanote.com", "date_joined": "2013-10-05T12:20:03.645Z"}}, {"pk": 2, "model": "auth.user", "fields": {"username": "user1", "first_name": "", "last_name": "", "is_active": true, "is_superuser": false, "is_staff": false, "last_login": "2013-10-05T16:23:37Z", "groups": [], "user_permissions": [], "password": "pbkdf2_sha256$10000$81fRc8lHRiml$WAhTPGQWcblGh5HMu7wAUvGeaWNdwwtzReMALDdJ+3A=", "email": "", "date_joined": "2013-10-05T16:23:37Z"}}, {"pk": 3, "model": "auth.user", "fields": {"username": "user2", "first_name": "", "last_name": "", "is_active": true, "is_superuser": false, "is_staff": false, "last_login": "2013-10-05T16:24:21.952Z", "groups": [], "user_permissions": [], "password": "pbkdf2_sha256$10000$EuKDKNvvuLrw$bu2C6wsq1lRtn84VPeig/62HQ04tMP9PPAtJd9QdeSs=", "email": "", "date_joined": "2013-10-05T16:24:21.952Z"}}, {"pk": "mxdhyuc0ceb5tquyz9gfgxelq7gvnf3q", "model": "sessions.session", "fields": {"expire_date": "2013-10-19T16:23:02.550Z", "session_data": "MWQwYzE3NmY4MzMzZDVjOTEzMWRjNzcyZjNlYTUwZTZhODRkN2E5ZDqAAn1xAShVEl9hdXRoX3VzZXJfYmFja2VuZHECVSlkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZHEDVQ1fYXV0aF91c2VyX2lkcQRLAXUu"}}, {"pk": 1, "model": "sites.site", "fields": {"domain": "example.com", "name": "example.com"}}, {"pk": 1, "model": "admin.logentry", "fields": {"action_flag": 1, "action_time": "2013-10-05T16:23:37.568Z", "object_repr": "user1", "object_id": "2", "change_message": "", "user": 1, "content_type": 4}}, {"pk": 2, "model": "admin.logentry", "fields": {"action_flag": 2, "action_time": "2013-10-05T16:24:10.617Z", "object_repr": "user1", "object_id": "2", "change_message": "Changed password.", "user": 1, "content_type": 4}}, {"pk": 3, "model": "admin.logentry", "fields": {"action_flag": 1, "action_time": "2013-10-05T16:24:22.058Z", "object_repr": "user2", "object_id": "3", "change_message": "", "user": 1, "content_type": 4}}, {"pk": 4, "model": "admin.logentry", "fields": {"action_flag": 1, "action_time": "2013-10-05T16:25:08.030Z", "object_repr": "http://dyanote.com/", "object_id": "1", "change_message": "", "user": 1, "content_type": 9}}, {"pk": 5, "model": "admin.logentry", "fields": {"action_flag": 1, "action_time": "2013-10-05T16:29:34.825Z", "object_repr": "Page object", "object_id": "1", "change_message": "", "user": 1, "content_type": 1}}, {"pk": 6, "model": "admin.logentry", "fields": {"action_flag": 1, "action_time": "2013-10-05T16:29:51.105Z", "object_repr": "Page object", "object_id": "2", "change_message": "", "user": 1, "content_type": 1}}, {"pk": 7, "model": "admin.logentry", "fields": {"action_flag": 1, "action_time": "2013-10-05T16:53:19.729Z", "object_repr": "1b24279ad7d5986301583538804e5240c3e588af", "object_id": "1", "change_message": "", "user": 1, "content_type": 11}}, {"pk": 1, "model": "oauth2.client", "fields": {"name": "Example Client", "url": "http://dyanote.com/", "client_type": 1, "redirect_uri": "http://dyanote.com/", "user": null, "client_id": "bb05c6ab017f50116084", "client_secret": "4063c2648cdd7f2e4dae563da80a516f2eb6ebb6"}}, {"pk": 1, "model": "oauth2.accesstoken", "fields": {"scope": 6, "token": "1b24279ad7d5986301583538804e5240c3e588af", "client": 1, "user": 2, "expires": "2025-07-04T23:52:57Z"}}, {"pk": 1, "model": "api.page", "fields": {"body": "Lore ipsum...", "title": "Example page", "author": 2, "created": "2013-10-05T16:29:34.668Z"}}, {"pk": 2, "model": "api.page", "fields": {"body": "Lorem ipsum dolorem...", "title": "Example page 2", "author": 2, "created": "2013-10-05T16:29:51.104Z"}}]
+[
+{
+    "pk": 1, 
+    "model": "auth.user", 
+    "fields": {
+        "username": "admin", 
+        "first_name": "", 
+        "last_name": "", 
+        "is_active": true, 
+        "is_superuser": true, 
+        "is_staff": true, 
+        "last_login": "2014-08-12T09:14:46.394Z", 
+        "groups": [], 
+        "user_permissions": [], 
+        "password": "pbkdf2_sha256$10000$uE0cHk3IIWvU$qmhic1xj/VHN8lCj1AW2hIjK+FDyhZ3oylMVKb7C/no=", 
+        "email": "", 
+        "date_joined": "2014-08-12T09:06:26.959Z"
+    }
+},
+{
+    "pk": 2, 
+    "model": "auth.user", 
+    "fields": {
+        "username": "test@dyanote.com", 
+        "first_name": "", 
+        "last_name": "", 
+        "is_active": true, 
+        "is_superuser": false, 
+        "is_staff": false, 
+        "last_login": "2014-08-12T09:15:34Z", 
+        "groups": [], 
+        "user_permissions": [], 
+        "password": "pbkdf2_sha256$10000$ee3qJ1pHTHhl$WxOYbGfiUAzfwzgzLSKxtDWdHYN2PIYKYzBNTouSIX0=", 
+        "email": "test@dyanote.com", 
+        "date_joined": "2014-08-12T09:15:34Z"
+    }
+},
+{
+    "pk": 1, 
+    "model": "sites.site", 
+    "fields": {
+        "domain": "example.com", 
+        "name": "example.com"
+    }
+},
+{
+    "pk": 1, 
+    "model": "oauth2.client", 
+    "fields": {
+        "name": "", 
+        "url": "http://localhost:5000/", 
+        "client_type": 1, 
+        "redirect_uri": "http://localhost:5000/", 
+        "user": null, 
+        "client_id": "bb05c6ab017f50116084", 
+        "client_secret": "4063c2648cdd7f2e4dae563da80a516f2eb6ebb6"
+    }
+},
+{
+    "pk": 1, 
+    "model": "oauth2.accesstoken", 
+    "fields": {
+        "scope": 2, 
+        "token": "1b24279ad7d5986301583538804e5240c3e588af", 
+        "client": 1, 
+        "user": [
+            "test@dyanote.com"
+        ], 
+        "expires": "2044-08-12T16:18:16Z"
+    }
+}
+]

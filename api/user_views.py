@@ -5,6 +5,10 @@ from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.shortcuts import redirect
 from django.template.loader import render_to_string
+from django.http import HttpResponse as DjangoResponse
+from django.views.decorators.csrf import csrf_exempt
+
+from provider.oauth2.views import AccessTokenView
 
 from rest_framework import generics
 from rest_framework import permissions
@@ -17,7 +21,7 @@ from rest_framework.views import APIView
 from api.permissions import IsOwnerOrAdmin
 from api.serializers import UserSerializer, NewUserSerializer, PasswordSerializer
 from api.models import ActivationKey
-from api.utils import mail_user
+from api.utils import mail_user, user_exists
 
 class UserDetail(generics.RetrieveAPIView):
     """
@@ -126,5 +130,22 @@ class UpdateResetPassword(APIView):
         except User.DoesNotExist:
             return Response(status=status.HTTP_400_BAD_REQUEST) 
 
-# TODO: Create a login view which checks the username specified in the url is the same as
-# the username in the params.
+
+class Login(AccessTokenView):
+
+    @csrf_exempt
+    def post(self, request, username):
+        if user_exists(username):
+            user = User.objects.get(username=username)
+            # Check if user is active
+            if user.is_active is False:
+                return DjangoResponse('User is not active',
+                                      status=status.HTTP_400_BAD_REQUEST)
+        # Check if the username in parameters metches the username in url
+        # print("\npath username: {}".format(username))
+        # print("\nparam username: {}".format(request.POST.get('username')))
+        if username != request.POST.get('username'):
+            # print('\nfail\n')
+            return DjangoResponse('Mismatching usernames',
+                                  status=status.HTTP_400_BAD_REQUEST)
+        return super(AccessTokenView, self).post(request)
