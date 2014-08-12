@@ -59,7 +59,7 @@ class ListCreateUsers(APIView):
             return Response(status=status.HTTP_409_CONFLICT)
         
         # Create user
-        user = User.objects.create_user(email, email, pwd)
+        user = User.objects.create_user(username, email, pwd)
         user.is_active = False
         user.save()
         activation_key = create_activation_key(user)
@@ -79,16 +79,16 @@ def create_activation_key(user):
 
 
 @api_view(('GET',))
-def activate(request, username):
+def activate(request, username, **kwargs):
     """ Activate a user after registration """
-    email = self.kwargs.get('username', '')
     key = request.QUERY_PARAMS.get('key', '')
     try:
-        activation_key = ActivationKey.objects.get(user=email, key=key)
+        activation_key = ActivationKey.objects.get(key=key)
         activation_key.user.is_active = True
         activation_key.user.save()
         activation_key.delete()
-        tpl = render_to_string('api/activation_succeeded.html', user=email)
+        # Create activation keys
+        tpl = render_to_string('api/activation_succeeded.html', { 'user': username })
         return Response(tpl, status=status.HTTP_200_OK)
     except ActivationKey.DoesNotExist:
         redirect('https://dyanote.com')
