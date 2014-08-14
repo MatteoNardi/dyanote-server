@@ -89,7 +89,7 @@ def activate(request, username, **kwargs):
     """ Activate a user after registration """
     key = request.QUERY_PARAMS.get('key', '')
     try:
-        activation_key = ActivationKey.objects.get(key=key)
+        activation_key = ActivationKey.objects.get(key=key, user__username=username)
         activation_key.user.is_active = True
         activation_key.user.save()
         activation_key.delete()
@@ -97,7 +97,7 @@ def activate(request, username, **kwargs):
         tpl = render_to_string('api/activation_succeeded.html', { 'user': username })
         return Response(tpl, status=status.HTTP_200_OK)
     except ActivationKey.DoesNotExist:
-        redirect('https://dyanote.com')
+        return redirect('https://dyanote.com')
 
 
 class UpdateResetPassword(APIView):

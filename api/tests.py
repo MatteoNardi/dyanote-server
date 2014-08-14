@@ -20,8 +20,9 @@ coverage report -m --include=api/*
 coverage html
 """
 
-from urllib import quote
 import unittest
+import re
+from urllib import quote
 from json import loads as load_json
 
 from django.core.urlresolvers import reverse
@@ -32,7 +33,7 @@ from django.core.exceptions import ValidationError
 from rest_framework.test import APITestCase, APIClient
 from rest_framework import status
 
-from api.models import Page
+from api.models import Page, ActivationKey
 
 
 # Costant values found in the test database fixture
@@ -209,9 +210,14 @@ class UserAPITest(APITestCase):
         self.assertEquals(mail.outbox[0].from_email, 'Dyanote')
         self.assertEquals(mail.outbox[0].to, ['new_user@dyanote.com'])
         self.assertRegexpMatches(mail.outbox[0].body, msg)
-        
         # check response
         self.assertEquals(response.status_code, status.HTTP_201_CREATED)
+        # check database
+        u = User.objects.get(email='new_user@dyanote.com')
+        self.assertFalse(u.is_active)
+        key = re.match(msg, mail.outbox[0].body).group(1)
+        k = ActivationKey.objects.get(key=key, user__email='new_user@dyanote.com')
+        self.assertIsNotNone(k)
 
     def test_user_creation_with_invalid_data(self):
         params = {
@@ -228,6 +234,36 @@ class UserAPITest(APITestCase):
         response = self.client.post('/api/users/', params, format='json')
         self.assertEquals(response.status_code, status.HTTP_409_CONFLICT)
 
+    def test_user_activation(self):
+        user = User.objects.create_user('new_user@dyanote.com', 
+                                        'new_user@dyanote.com', '123')
+        user.is_active = False
+        user.save()
+        key = ActivationKey.objects.create(key='0123456789abcdef', user=user)
+        data = {
+            'key': '0123456789abcdef'
+        }
+        path = quote('/api/users/{}/activate/'.format('new_user@dyanote.com'))
+        response = self.client.get(path, data)
+        self.assertEquals(response.status_code, status.HTTP_200_OK)
 
+        user = User.objects.get(pk=user.pk)
+        self.assertTrue(user.is_active)
+
+    def test_user_activation_wrong_user(self):
+        user = User.objects.create_user('new_user@dyanote.com', 
+                                        'new_user@dyanote.com', '123')
+        user.is_active = False
+        user.save()
+        key = ActivationKey.objects.create(key='0123456789abcdef', user=user)
+        data = {
+            'key': '0123456789abcdef'
+        }
+        path = quote('/api/users/{}/activate/'.format(USERNAME))
+        response = self.client.get(path, data)
+        self.assertEquals(response.status_code, status.HTTP_302_FOUND)
+
+        user = User.objects.get(pk=user.pk)
+        self.assertFalse(user.is_active)
 
 
