@@ -22,10 +22,12 @@ coverage html
 
 from urllib import quote
 import unittest
+from json import loads as load_json
 
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django.contrib.auth.models import User
+from django.core import mail
 from django.core.exceptions import ValidationError
 from rest_framework.test import APITestCase, APIClient
 from rest_framework import status
@@ -39,6 +41,8 @@ PASSWORD = 'pwd'
 CLIENT_ID = 'bb05c6ab017f50116084'
 CLIENT_SECRET = '4063c2648cdd7f2e4dae563da80a516f2eb6ebb6'
 ACCESS_TOKEN = '1b24279ad7d5986301583538804e5240c3e588af'
+ADMIN_USERNAME = 'admin' 
+ADMIN_PASSWORD = 'admin'
 
 
 # Model test
@@ -74,6 +78,24 @@ class PageTest(APITestCase):
 class UserAPITest(APITestCase):
     fixtures = ['test-db.json']
 
+    def set_token(self, token):
+        self.client = APIClient()
+        self.client.credentials(HTTP_AUTHORIZATION="Bearer " + token)
+
+    def login(self, username, password):
+        params = {
+            'client_id': CLIENT_ID,
+            'client_secret': CLIENT_SECRET,
+            'grant_type': 'password',
+            'username': username,
+            'password': password
+        }
+        path = quote('/api/users/{}/login/'.format(username))
+        response = self.client.post(path, params)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        token = load_json(response.content)['access_token']
+        self.set_token(token)
+
     def test_login(self):
         params = {
             'client_id': CLIENT_ID,
@@ -82,7 +104,7 @@ class UserAPITest(APITestCase):
             'username': USERNAME,
             'password': PASSWORD
         }
-        path = quote("/api/users/{}/login/".format(USERNAME))
+        path = quote('/api/users/{}/login/'.format(USERNAME))
         response = self.client.post(path, params)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
@@ -92,27 +114,27 @@ class UserAPITest(APITestCase):
             'client_secret': CLIENT_SECRET,
             'grant_type': 'password',
             'username': USERNAME,
-            'password': PASSWORD + "..ops!"
+            'password': PASSWORD + '..ops!'
         }
-        path = quote("/api/users/{}/login/".format(USERNAME))
+        path = quote('/api/users/{}/login/'.format(USERNAME))
         response = self.client.post(path, params)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_login_with_inactive_user(self):
-        u = User.objects.create_user("test@test.com", "test@test.com", "pwd")
+        u = User.objects.create_user('test@test.com', 'test@test.com', 'pwd')
         u.is_active = False
         u.save()
         params = {
             'client_id': CLIENT_ID,
             'client_secret': CLIENT_SECRET,
             'grant_type': 'password',
-            'username': "test@test.com",
-            'password': "pwd"
+            'username': 'test@test.com',
+            'password': 'pwd'
         }
-        path = quote("/api/users/{}/login/".format("test@test.com"))
+        path = quote('/api/users/{}/login/'.format('test@test.com'))
         response = self.client.post(path, params)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response.content, "User is not active")
+        self.assertEqual(response.content, 'User is not active')
 
     def test_login_with_wrong_path(self):
         params = {
@@ -122,22 +144,90 @@ class UserAPITest(APITestCase):
             'username': USERNAME,
             'password': PASSWORD
         }
-        path = quote("/api/users/{}/login/".format("wrongEmail@test.com"))
+        path = quote('/api/users/{}/login/'.format('wrongEmail@test.com'))
         response = self.client.post(path, params)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response.content, "Mismatching usernames")
+        self.assertEqual(response.content, 'Mismatching usernames')
 
-    # def setUp(self):
-    #   self.client = APIClient()
-    #     self.client.credentials(HTTP_AUTHORIZATION="Bearer " + ACCESS_TOKEN)
+    def test_get_user_detail_as_unauthenticated(self):
+        path = quote('/api/users/{}/'.format(USERNAME))
+        response = self.client.get(path)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        ERROR = '{"detail": "Authentication credentials were not provided."}'
+        self.assertEqual(response.content, ERROR)
+
+    def test_get_user_detail(self):
+        self.set_token(ACCESS_TOKEN)
+        path = quote('/api/users/{}/'.format(USERNAME))
+        response = self.client.get(path)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        RES = ('{"url": "http://testserver/api/users/test@dyanote.com/",'
+               ' "username": "test@dyanote.com", "email": "test@dyanote.com",'
+               ' "pages": "http://testserver/api/users/test@dyanote.com/pages/"}')
+        self.assertEqual(response.content, RES)
+
+    def test_get_user_detail_as_admin(self):
+        self.login('admin', 'admin')
+        path = quote('/api/users/{}/'.format(USERNAME))
+        response = self.client.get(path)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        RES = ('{"url": "http://testserver/api/users/test@dyanote.com/",'
+               ' "username": "test@dyanote.com", "email": "test@dyanote.com",'
+               ' "pages": "http://testserver/api/users/test@dyanote.com/pages/"}')
+        self.assertEqual(response.content, RES)
+
+    def test_get_user_list_as_unauthenticated(self):
+        response = self.client.get('/api/users/')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        ERROR = '{"detail": "Authentication credentials were not provided."}'
+        self.assertEqual(response.content, ERROR)
+
+    def test_get_user_list(self):
+        self.set_token(ACCESS_TOKEN)
+        response = self.client.get('/api/users/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        MSG = ('[{"url": "http://testserver/api/users/test@dyanote.com/",'
+                ' "username": "test@dyanote.com",'
+                ' "email": "test@dyanote.com",'
+                ' "pages": "http://testserver/api/users/test@dyanote.com/pages/"}]')
+        self.assertEqual(response.content, MSG)
+
+    def test_user_creation(self):
+        params = {
+            'email': 'new_user@dyanote.com',
+            'password': '123'
+        } 
+        response = self.client.post('/api/users/', params, format='json')
+
+        # check mail
+        msg = ("Welcome to Dyanote, your personal hypertext\.\n"
+               "To activate your account, follow this link:\n"
+               "https://example\.com/api/users/new_user@dyanote\.com/activate/"
+               "\?key=([0-9a-fA-F]+)\n\n")
+        self.assertEquals(len(mail.outbox), 1)
+        self.assertEquals(mail.outbox[0].subject, 'Welcome to Dyanote')
+        self.assertEquals(mail.outbox[0].from_email, 'Dyanote')
+        self.assertEquals(mail.outbox[0].to, ['new_user@dyanote.com'])
+        self.assertRegexpMatches(mail.outbox[0].body, msg)
+        
+        # check response
+        self.assertEquals(response.status_code, status.HTTP_201_CREATED)
+
+    def test_user_creation_with_invalid_data(self):
+        params = {
+            'email': 'new_user@dyanote.com',
+        } 
+        response = self.client.post('/api/users/', params, format='json')
+        self.assertEquals(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_user_recreation(self):
+        params = {
+            'email': USERNAME,
+            'password': '123'
+        } 
+        response = self.client.post('/api/users/', params, format='json')
+        self.assertEquals(response.status_code, status.HTTP_409_CONFLICT)
 
 
-    # def test_get_users_list_forbidden(self):
-    #     response = self.client.get("/api/users/{0}/".format(USERNAME))
-    #     self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-    # def test_get_page_list(self):
-    #     response = self.client.get("/api/users/{0}/pages/".format(USERNAME))
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-    #     for page in response.data: del page['created'] # Do not check dates (it's hard to do well)  
-    #     self.assertEqual(response.data, [{"url": "http://testserver/api/users/user1/pages/1/", "id": 1, "title": "Example page", "body": "Lore ipsum...", "author": "user1"}, {"url": "http://testserver/api/users/user1/pages/2/", "id": 2, "title": "Example page 2", "body": "Lorem ipsum dolorem...", "author": "user1"}])
+

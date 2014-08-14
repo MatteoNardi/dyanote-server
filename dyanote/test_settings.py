@@ -17,6 +17,8 @@ SOUTH_TESTS_MIGRATE = False
 
 USE_TZ = True
 
+SITE_ID = 1
+
 # Additional locations of static files
 STATICFILES_DIRS = (
     os.path.join(os.path.dirname(PROJECT_ROOT), "client", "app"),

@@ -3,7 +3,7 @@ import random
 
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
 from django.template.loader import render_to_string
 from django.http import HttpResponse as DjangoResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -25,7 +25,7 @@ from api.utils import mail_user, user_exists
 
 class UserDetail(generics.RetrieveAPIView):
     """
-    API endpoint that allows users to be viewed or edited.
+    API endpoint that allows users to be viewed.
     """
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -38,14 +38,15 @@ class UserDetail(generics.RetrieveAPIView):
 class ListCreateUsers(APIView):
     def get(self, request, format=None):
         """
-        Get the list of users you can edit (either all users if you're admin
+        Get the list of users you can access (either all users if you're admin
         or just yourself if you're a normal user) 
         """
         if not request.successful_authenticator:
             raise exceptions.NotAuthenticated()
         user = self.request.user
         dataset = User.objects.all() if user.is_superuser else [user,]
-        serializer = UserSerializer(dataset, many=True)
+        serializer = UserSerializer(dataset, many=True, 
+                                    context={'request': request})
         return Response(serializer.data)
 
     def post(self, request, format=None):
@@ -63,6 +64,7 @@ class ListCreateUsers(APIView):
             return Response(status=status.HTTP_409_CONFLICT)
         
         # Create user
+        username = email
         user = User.objects.create_user(username, email, pwd)
         user.is_active = False
         user.save()
