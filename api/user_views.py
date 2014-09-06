@@ -59,14 +59,20 @@ class ListCreateUsers(APIView):
 
         email = serialized.init_data['email']
         pwd = serialized.init_data['password']
-        # If user already exists, return 409
+
+        user = None
         if User.objects.filter(email=email).count():
-            return Response(status=status.HTTP_409_CONFLICT)
-        
-        # Create user
-        username = email
-        user = User.objects.create_user(username, email, pwd)
-        user.is_active = False
+            user = User.objects.get(email=email)
+            if user.is_active:
+                return Response(status=status.HTTP_409_CONFLICT)
+            # If an inactive user already exists, change passsword and send
+            # a new activation mail
+            user.set_password(pwd)
+        else:
+            # Create user
+            username = email
+            user = User.objects.create_user(username, email, pwd)
+            user.is_active = False
         user.save()
         activation_key = create_activation_key(user)
         mail_user(user, 'Welcome to Dyanote', 

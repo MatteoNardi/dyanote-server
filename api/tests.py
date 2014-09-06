@@ -218,6 +218,7 @@ class UserAPITest(APITestCase):
         key = re.match(msg, mail.outbox[0].body).group(1)
         k = ActivationKey.objects.get(key=key, user__email='new_user@dyanote.com')
         self.assertIsNotNone(k)
+        self.assertTrue(u.check_password('123'))
 
     def test_user_creation_with_invalid_data(self):
         params = {
@@ -233,6 +234,21 @@ class UserAPITest(APITestCase):
         } 
         response = self.client.post('/api/users/', params, format='json')
         self.assertEquals(response.status_code, status.HTTP_409_CONFLICT)
+
+    def test_inactive_user_recreation(self):
+        # If someone tries to create a user which already exists, change password and
+        # send new activation mail.
+        u = User.objects.get(email=USERNAME)
+        u.is_active = False
+        u.save()
+        params = {
+            'email': USERNAME,
+            'password': 'new password 123'
+        }
+        response = self.client.post('/api/users/', params, format='json')
+        self.assertEquals(response.status_code, status.HTTP_201_CREATED)
+        u = User.objects.get(email=USERNAME)
+        self.assertTrue(u.check_password('new password 123'))
 
     def test_user_activation(self):
         user = User.objects.create_user('new_user@dyanote.com', 
