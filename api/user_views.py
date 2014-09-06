@@ -1,6 +1,3 @@
-import hashlib
-import random
-
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.shortcuts import redirect, get_object_or_404
@@ -21,7 +18,7 @@ from rest_framework.views import APIView
 from api.permissions import IsOwnerOrAdmin
 from api.serializers import UserSerializer, NewUserSerializer, PasswordSerializer
 from api.models import ActivationKey
-from api.utils import mail_user, user_exists
+from api.utils import mail_user, user_exists, generate_activation_key
 
 class UserDetail(generics.RetrieveAPIView):
     """
@@ -74,20 +71,21 @@ class ListCreateUsers(APIView):
             user = User.objects.create_user(username, email, pwd)
             user.is_active = False
         user.save()
-        activation_key = create_activation_key(user)
+
+        key = generate_activation_key(user)
+        activation_key = None
+        # If user has already an activation key, replace it.
+        if ActivationKey.objects.filter(user=user).count():
+            activation_key = ActivationKey.objects.get(user=user)
+            activation_key.key = key
+            activation_key.save()
+        else:
+            activation_key = ActivationKey.objects.create(user=user, key=key)
+
         mail_user(user, 'Welcome to Dyanote', 
             'api/activation_email.txt', key=activation_key.key)
 
         return Response(serialized.data, status=status.HTTP_201_CREATED)
-
-
-def create_activation_key(user):
-    salt = hashlib.sha1(str(random.random())).hexdigest()[:5]
-    email = user.email
-    if isinstance(email, unicode):
-        email = email.encode('utf-8')
-    activation_key = hashlib.sha1(salt+email).hexdigest()
-    return ActivationKey.objects.create(user=user, key=activation_key)
 
 
 @api_view(('GET',))

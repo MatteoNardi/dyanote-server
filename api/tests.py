@@ -246,6 +246,7 @@ class UserAPITest(APITestCase):
             'password': 'new password 123'
         }
         response = self.client.post('/api/users/', params, format='json')
+        response = self.client.post('/api/users/', params, format='json')
         self.assertEquals(response.status_code, status.HTTP_201_CREATED)
         u = User.objects.get(email=USERNAME)
         self.assertTrue(u.check_password('new password 123'))
