@@ -9,7 +9,7 @@
         "is_active": true, 
         "is_superuser": true, 
         "is_staff": true, 
-        "last_login": "2014-08-12T09:14:46.394Z", 
+        "last_login": "2014-09-06T17:49:23.067Z", 
         "groups": [], 
         "user_permissions": [], 
         "password": "pbkdf2_sha256$10000$uE0cHk3IIWvU$qmhic1xj/VHN8lCj1AW2hIjK+FDyhZ3oylMVKb7C/no=", 
@@ -39,8 +39,16 @@
     "pk": 1, 
     "model": "sites.site", 
     "fields": {
-        "domain": "example.com", 
-        "name": "example.com"
+        "domain": "https://dyanote.herokuapp.com", 
+        "name": "Server"
+    }
+},
+{
+    "pk": 2, 
+    "model": "sites.site", 
+    "fields": {
+        "domain": "http://dyanote.com", 
+        "name": "Client"
     }
 },
 {

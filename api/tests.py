@@ -203,7 +203,7 @@ class UserAPITest(APITestCase):
         # check mail
         msg = ("Welcome to Dyanote, your personal hypertext\.\n"
                "To activate your account, follow this link:\n"
-               "https://example\.com/api/users/new_user@dyanote\.com/activate/"
+               "https://dyanote.herokuapp\.com/api/users/new_user@dyanote\.com/activate/"
                "\?key=([0-9a-fA-F]+)\n\n")
         self.assertEquals(len(mail.outbox), 1)
         self.assertEquals(mail.outbox[0].subject, 'Welcome to Dyanote')

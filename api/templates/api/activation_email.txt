@@ -1,4 +1,4 @@
 Welcome to Dyanote, your personal hypertext.
 To activate your account, follow this link:
-https://{{ site }}/api/users/{{ email }}/activate/?key={{ key }}
+{{ site }}/api/users/{{ email }}/activate/?key={{ key }}
 

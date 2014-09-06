@@ -14,7 +14,6 @@ def mail_user(user, subject, template, **kwargs):
     msg = render_to_string(template, params)
     send_mail(subject, msg, 'Dyanote', [user.email])
 
-
 def user_exists(username):
 	return username and User.objects.filter(username=username).count()
 

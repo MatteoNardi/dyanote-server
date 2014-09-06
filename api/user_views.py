@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.contrib.sites.models import Site
 from django.core.mail import send_mail
 from django.shortcuts import redirect, get_object_or_404
 from django.template.loader import render_to_string
@@ -99,9 +100,9 @@ def activate(request, username, **kwargs):
         activation_key.delete()
         # Create activation keys
         tpl = render_to_string('api/activation_succeeded.html', { 'user': username })
-        return Response(tpl, status=status.HTTP_200_OK)
+        return DjangoResponse(tpl, status=status.HTTP_200_OK)
     except ActivationKey.DoesNotExist:
-        return redirect('https://dyanote.com')
+        return redirect(Site.objects.get(name='Client').domain)
 
 
 class UpdateResetPassword(APIView):
