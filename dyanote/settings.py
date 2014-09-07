@@ -138,8 +138,6 @@ INSTALLED_APPS = (
     # We use OAuth2 for authentication
     'provider',
     'provider.oauth2',
-    # Migrations support
-    'south',
     # Add CORS headers
     'corsheaders'
 )
