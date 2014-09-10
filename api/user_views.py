@@ -140,7 +140,6 @@ class UpdateResetPassword(APIView):
 
 class Login(AccessTokenView):
 
-    @csrf_exempt
     def post(self, request, username):
         if user_exists(username):
             user = User.objects.get(username=username)

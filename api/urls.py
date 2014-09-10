@@ -1,4 +1,5 @@
 from django.conf.urls import patterns, url, include
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework.urlpatterns import format_suffix_patterns
 
 from api import views, user_views
@@ -14,7 +15,7 @@ urlpatterns = format_suffix_patterns(patterns('api.views',
         user_views.UserDetail.as_view(),
         name='user-detail'),
     url(r'^users/(?P<username>[\w@\.]+)/login/$',
-        user_views.Login.as_view(),
+        csrf_exempt(user_views.Login.as_view()),
         name='user-login'),
     url(r'^users/(?P<username>[\w@\.]+)/activate/$',
         user_views.activate,
