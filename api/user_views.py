@@ -19,7 +19,8 @@ from rest_framework.views import APIView
 from api.permissions import IsOwnerOrAdmin
 from api.serializers import UserSerializer, NewUserSerializer, PasswordSerializer
 from api.models import ActivationKey
-from api.utils import mail_user, user_exists, generate_activation_key
+from api import utils
+from api.utils import mail_user, user_exists, generate_activation_key, get_client_url
 
 class UserDetail(generics.RetrieveAPIView):
     """
@@ -83,7 +84,7 @@ class ListCreateUsers(APIView):
         else:
             activation_key = ActivationKey.objects.create(user=user, key=key)
 
-        mail_user(user, 'Welcome to Dyanote', 
+        utils.mail_user(user, 'Welcome to Dyanote', 
             'api/activation_email.txt', key=activation_key.key)
 
         return Response(serialized.data, status=status.HTTP_201_CREATED)
@@ -94,15 +95,17 @@ def activate(request, username, **kwargs):
     """ Activate a user after registration """
     key = request.QUERY_PARAMS.get('key', '')
     try:
+        # Create activation keys
         activation_key = ActivationKey.objects.get(key=key, user__username=username)
         activation_key.user.is_active = True
         activation_key.user.save()
         activation_key.delete()
-        # Create activation keys
+        # Create default notes
+        utils.setup_default_notes(activation_key.user)
         tpl = render_to_string('api/activation_succeeded.html', { 'user': username })
         return DjangoResponse(tpl, status=status.HTTP_200_OK)
     except ActivationKey.DoesNotExist:
-        return redirect(Site.objects.get(name='Client').domain)
+        return redirect(get_client_url())
 
 
 class UpdateResetPassword(APIView):
@@ -131,7 +134,7 @@ class UpdateResetPassword(APIView):
             password = User.objects.make_random_password()
             user.set_password(password)
             user.save()
-            mail_user(user, 'New Dyanote password',
+            utils.mail_user(user, 'New Dyanote password',
                 'api/new_password.txt', password=password)
 
         except User.DoesNotExist:

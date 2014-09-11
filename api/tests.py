@@ -34,6 +34,7 @@ from rest_framework.test import APITestCase, APIClient
 from rest_framework import status
 
 from api.models import Page, ActivationKey
+from api import utils
 
 
 # Costant values found in the test database fixture
@@ -50,7 +51,8 @@ ADMIN_PASSWORD = 'admin'
 class PageTest(APITestCase):
     fixtures = ['test-db.json']  # Load test db
 
-    def create_page(self, author, title="Test note", parent=None, 
+    @classmethod
+    def create_page(cls, author, title="Test note", parent=None, 
                     body="Lorem ipsum dol...", flags=Page.NORMAL):
         return Page.objects.create(
             author=author,
@@ -60,7 +62,7 @@ class PageTest(APITestCase):
             flags=flags)
 
     def test_page_creation(self):
-        note = self.create_page(
+        note = PageTest.create_page(
             author=User.objects.get(username=USERNAME),
             title="Root page",
             flags=Page.ROOT)
@@ -69,10 +71,42 @@ class PageTest(APITestCase):
         self.assertEqual(note.title, "Root page")
 
     def test_normal_page_with_no_parent_throws_error(self):
-        note = self.create_page(
+        note = PageTest.create_page(
             author=User.objects.get(username=USERNAME),
             flags=Page.NORMAL)
         self.assertRaises(ValidationError, note.clean)
+
+
+# Utils tests
+class UtilsTest(APITestCase):
+    fixtures = ['test-db.json']
+
+    def test_get_server_url(self):
+        self.assertEqual(utils.get_server_url(), 'https://dyanote.herokuapp.com')
+
+    def test_get_client_url(self):
+        self.assertEqual(utils.get_client_url(), 'http://dyanote.com')
+
+    def test_user_exists(self):
+        self.assertTrue(utils.user_exists(USERNAME))
+        self.assertFalse(utils.user_exists('abracadabra@gmmail.com'))
+
+    def test_get_note_url(self):
+        note = PageTest.create_page(author=User.objects.get(username=USERNAME))
+        url = 'https://dyanote.herokuapp.com/api/users/test@dyanote.com/pages/1/'
+        self.assertEqual(utils.get_note_url(note), url)
+
+    def test_setup_default_notes(self):
+        user = User.objects.create_user('test@test.com', 'test@test.com', 'pwd')
+        utils.setup_default_notes(user)
+        pages = Page.objects.filter(author=user.id)
+        self.assertEqual(pages.count(), 9)
+
+        root = Page.objects.get(author=user.id, flags=Page.ROOT)
+        todo = Page.objects.get(author=user.id, title='Todo')
+        url = utils.get_note_url(todo)
+        self.assertIn(url, root.body)
+        self.assertEqual(todo.parent, root)
 
 
 # User testing
@@ -282,5 +316,21 @@ class UserAPITest(APITestCase):
 
         user = User.objects.get(pk=user.pk)
         self.assertFalse(user.is_active)
+
+    def test_user_activation_creates_default_notes(self):
+        user = User.objects.create_user('new_user@dyanote.com', 
+                                        'new_user@dyanote.com', '123')
+        user.is_active = False
+        user.save()
+        key = ActivationKey.objects.create(key='0123456789abcdef', user=user)
+        data = {
+            'key': '0123456789abcdef'
+        }
+        path = quote('/api/users/{}/activate/'.format('new_user@dyanote.com'))
+        response = self.client.get(path, data)
+        self.assertEquals(response.status_code, status.HTTP_200_OK)
+
+        user = User.objects.get(pk=user.pk)
+        self.assertTrue(user.pages.count() > 5)
 
 
