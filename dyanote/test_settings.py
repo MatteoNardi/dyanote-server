@@ -13,11 +13,9 @@ DATABASES = {
     }
 }
 
-SOUTH_TESTS_MIGRATE = False
-
 USE_TZ = True
 
-SITE_ID = 1
+SITE_ID = 2
 
 # Additional locations of static files
 STATICFILES_DIRS = (
@@ -81,8 +79,6 @@ INSTALLED_APPS = (
     # We use OAuth2 for authentication
     'provider',
     'provider.oauth2',
-    # Migrations support
-    'south',
     # Add CORS headers
     'corsheaders'
 )

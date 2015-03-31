@@ -1,80 +1,54 @@
 [
 {
-    "pk": 1, 
-    "model": "auth.user", 
     "fields": {
-        "username": "admin", 
-        "first_name": "", 
-        "last_name": "", 
-        "is_active": true, 
-        "is_superuser": true, 
-        "is_staff": true, 
-        "last_login": "2014-09-06T17:49:23.067Z", 
-        "groups": [], 
-        "user_permissions": [], 
-        "password": "pbkdf2_sha256$10000$uE0cHk3IIWvU$qmhic1xj/VHN8lCj1AW2hIjK+FDyhZ3oylMVKb7C/no=", 
-        "email": "", 
+        "username": "admin",
+        "first_name": "",
+        "last_name": "",
+        "is_active": true,
+        "is_superuser": true,
+        "is_staff": true,
+        "last_login": "2014-09-07T06:40:41.787Z",
+        "groups": [],
+        "user_permissions": [],
+        "password": "pbkdf2_sha256$12000$bCMZhywWlnvh$nJxrHjEz08l9mAlbJsFCCbjIbuzX7g1FUDNIltWVQPA=",
+        "email": "",
         "date_joined": "2014-08-12T09:06:26.959Z"
-    }
+    },
+    "model": "auth.user",
+    "pk": 1
 },
 {
-    "pk": 2, 
-    "model": "auth.user", 
     "fields": {
-        "username": "test@dyanote.com", 
-        "first_name": "", 
-        "last_name": "", 
-        "is_active": true, 
-        "is_superuser": false, 
-        "is_staff": false, 
-        "last_login": "2014-08-12T09:15:34Z", 
-        "groups": [], 
-        "user_permissions": [], 
-        "password": "pbkdf2_sha256$10000$ee3qJ1pHTHhl$WxOYbGfiUAzfwzgzLSKxtDWdHYN2PIYKYzBNTouSIX0=", 
-        "email": "test@dyanote.com", 
+        "username": "test@dyanote.com",
+        "first_name": "",
+        "last_name": "",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": "2014-08-12T09:15:34Z",
+        "groups": [],
+        "user_permissions": [],
+        "password": "pbkdf2_sha256$10000$ee3qJ1pHTHhl$WxOYbGfiUAzfwzgzLSKxtDWdHYN2PIYKYzBNTouSIX0=",
+        "email": "test@dyanote.com",
         "date_joined": "2014-08-12T09:15:34Z"
-    }
+    },
+    "model": "auth.user",
+    "pk": 2
 },
 {
-    "pk": 1, 
-    "model": "sites.site", 
     "fields": {
-        "domain": "https://dyanote.herokuapp.com", 
-        "name": "Server"
-    }
-},
-{
-    "pk": 2, 
-    "model": "sites.site", 
-    "fields": {
-        "domain": "http://dyanote.com", 
+        "domain": "http://dyanote.com",
         "name": "Client"
-    }
+    },
+    "model": "sites.site",
+    "pk": 1
 },
 {
-    "pk": 1, 
-    "model": "oauth2.client", 
     "fields": {
-        "name": "", 
-        "url": "http://localhost:5000/", 
-        "client_type": 1, 
-        "redirect_uri": "http://localhost:5000/", 
-        "user": null, 
-        "client_id": "bb05c6ab017f50116084", 
-        "client_secret": "4063c2648cdd7f2e4dae563da80a516f2eb6ebb6"
-    }
-},
-{
-    "pk": 1, 
-    "model": "oauth2.accesstoken", 
-    "fields": {
-        "scope": 2, 
-        "token": "1b24279ad7d5986301583538804e5240c3e588af", 
-        "client": 1, 
-        "user": [
-            "test@dyanote.com"
-        ], 
-        "expires": "2044-08-12T16:18:16Z"
-    }
+        "domain": "https://dyanote.herokuapp.com",
+        "name": "Server"
+    },
+    "model": "sites.site",
+    "pk": 2
 }
 ]

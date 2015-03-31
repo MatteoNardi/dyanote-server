@@ -6,7 +6,7 @@ Use test_settings when running this:
 This will use sqlite and other settings to make test execution faster.
 
 Command used to create test database.
-./manage.py dumpdata --n --indent=4
+./manage.py dumpdata --indent=4
     --natural
     -e admin
     -e sessions
