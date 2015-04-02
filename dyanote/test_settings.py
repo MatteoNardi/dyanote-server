@@ -77,8 +77,7 @@ INSTALLED_APPS = (
     # We use Django Rest Framework for our REST api.
     'rest_framework',
     # We use OAuth2 for authentication
-    'provider',
-    'provider.oauth2',
+    'oauth2_provider',
     # Add CORS headers
     'corsheaders'
 )
