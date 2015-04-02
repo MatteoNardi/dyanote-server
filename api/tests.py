@@ -32,7 +32,7 @@ from django.core import mail
 from django.core.exceptions import ValidationError
 from rest_framework.test import APITestCase, APIClient
 from rest_framework import status
-
+from django.core.urlresolvers import get_script_prefix, resolve
 from api.models import Page, ActivationKey
 from api import utils
 
@@ -62,6 +62,7 @@ class PageTest(APITestCase):
             flags=flags)
 
     def test_page_creation(self):
+        print(resolve('/api/users/test%asdcom/'));
         note = PageTest.create_page(
             author=User.objects.get(username=USERNAME),
             title="Root page",
