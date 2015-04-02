@@ -50,5 +50,34 @@
     },
     "model": "sites.site",
     "pk": 2
+},
+{
+    "fields": {
+        "authorization_grant_type": "password",
+        "client_id": "bb05c6ab017f50116084",
+        "user": [
+            "admin"
+        ],
+        "client_type": "public",
+        "skip_authorization": false,
+        "client_secret": "4063c2648cdd7f2e4dae563da80a516f2eb6ebb6",
+        "name": "DyanoteAngularJS",
+        "redirect_uris": ""
+    },
+    "model": "oauth2_provider.application",
+    "pk": 1
+},
+{
+    "pk": 1,
+    "model": "oauth2_provider.accesstoken",
+    "fields": {
+        "scope": "",
+        "expires": "2019-12-11T17:59:15Z",
+        "token": "1b24279ad7d5986301583538804e5240c3e588af",
+        "application": 1,
+        "user": [
+            "test@dyanote.com"
+        ]
+    }
 }
 ]

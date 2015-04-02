@@ -22,7 +22,7 @@ coverage html
 
 import unittest
 import re
-from urllib import quote
+from urllib.parse import quote
 from json import loads as load_json
 
 from django.core.urlresolvers import reverse
@@ -93,7 +93,7 @@ class UtilsTest(APITestCase):
 
     def test_get_note_url(self):
         note = PageTest.create_page(author=User.objects.get(username=USERNAME))
-        url = 'https://dyanote.herokuapp.com/api/users/test@dyanote.com/pages/1/'
+        url = 'https://dyanote.herokuapp.com/api/users/test%40dyanote.com/pages/1/'
         self.assertEqual(utils.get_note_url(note), url)
 
     def test_setup_default_notes(self):
@@ -128,7 +128,7 @@ class UserAPITest(APITestCase):
         path = quote('/api/users/{}/login/'.format(username))
         response = self.client.post(path, params)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        token = load_json(response.content)['access_token']
+        token = load_json(response.content.decode())['access_token']
         self.set_token(token)
 
     def test_login(self):
@@ -153,7 +153,7 @@ class UserAPITest(APITestCase):
         }
         path = quote('/api/users/{}/login/'.format(USERNAME))
         response = self.client.post(path, params)
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_login_with_inactive_user(self):
         u = User.objects.create_user('test@test.com', 'test@test.com', 'pwd')
@@ -168,8 +168,8 @@ class UserAPITest(APITestCase):
         }
         path = quote('/api/users/{}/login/'.format('test@test.com'))
         response = self.client.post(path, params)
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response.content, 'User is not active')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(response.content, b'User is not active')
 
     def test_login_with_wrong_path(self):
         params = {
@@ -181,14 +181,14 @@ class UserAPITest(APITestCase):
         }
         path = quote('/api/users/{}/login/'.format('wrongEmail@test.com'))
         response = self.client.post(path, params)
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response.content, 'Mismatching usernames')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(response.content, b'Mismatching usernames')
 
     def test_get_user_detail_as_unauthenticated(self):
         path = quote('/api/users/{}/'.format(USERNAME))
         response = self.client.get(path)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        ERROR = '{"detail": "Authentication credentials were not provided."}'
+        ERROR = b'{"detail":"Authentication credentials were not provided."}'
         self.assertEqual(response.content, ERROR)
 
     def test_get_user_detail(self):
@@ -196,9 +196,9 @@ class UserAPITest(APITestCase):
         path = quote('/api/users/{}/'.format(USERNAME))
         response = self.client.get(path)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        RES = ('{"url": "http://testserver/api/users/test@dyanote.com/",'
-               ' "username": "test@dyanote.com", "email": "test@dyanote.com",'
-               ' "pages": "http://testserver/api/users/test@dyanote.com/pages/"}')
+        RES = (b'{"url":"http://testserver/api/users/test%40dyanote.com/",'
+               b'"username":"test@dyanote.com","email":"test@dyanote.com",'
+               b'"pages":"http://testserver/api/users/test%40dyanote.com/pages/"}')
         self.assertEqual(response.content, RES)
 
     def test_get_user_detail_as_admin(self):
@@ -206,25 +206,25 @@ class UserAPITest(APITestCase):
         path = quote('/api/users/{}/'.format(USERNAME))
         response = self.client.get(path)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        RES = ('{"url": "http://testserver/api/users/test@dyanote.com/",'
-               ' "username": "test@dyanote.com", "email": "test@dyanote.com",'
-               ' "pages": "http://testserver/api/users/test@dyanote.com/pages/"}')
+        RES = (b'{"url":"http://testserver/api/users/test%40dyanote.com/",'
+               b'"username":"test@dyanote.com","email":"test@dyanote.com",'
+               b'"pages":"http://testserver/api/users/test%40dyanote.com/pages/"}')
         self.assertEqual(response.content, RES)
 
     def test_get_user_list_as_unauthenticated(self):
         response = self.client.get('/api/users/')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        ERROR = '{"detail": "Authentication credentials were not provided."}'
+        ERROR = b'{"detail":"Authentication credentials were not provided."}'
         self.assertEqual(response.content, ERROR)
 
     def test_get_user_list(self):
         self.set_token(ACCESS_TOKEN)
         response = self.client.get('/api/users/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        MSG = ('[{"url": "http://testserver/api/users/test@dyanote.com/",'
-                ' "username": "test@dyanote.com",'
-                ' "email": "test@dyanote.com",'
-                ' "pages": "http://testserver/api/users/test@dyanote.com/pages/"}]')
+        MSG = (b'[{"url":"http://testserver/api/users/test%40dyanote.com/",'
+                b'"username":"test@dyanote.com",'
+                b'"email":"test@dyanote.com",'
+                b'"pages":"http://testserver/api/users/test%40dyanote.com/pages/"}]')
         self.assertEqual(response.content, MSG)
 
     def test_user_creation(self):

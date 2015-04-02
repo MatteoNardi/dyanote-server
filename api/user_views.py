@@ -6,7 +6,7 @@ from django.template.loader import render_to_string
 from django.http import HttpResponse as DjangoResponse
 from django.views.decorators.csrf import csrf_exempt
 
-from provider.oauth2.views import AccessTokenView
+from oauth2_provider.views.base import TokenView
 
 from rest_framework import generics
 from rest_framework import permissions
@@ -56,8 +56,8 @@ class ListCreateUsers(APIView):
         if not serialized.is_valid():
             return Response(serialized._errors, status=status.HTTP_400_BAD_REQUEST)
 
-        email = serialized.init_data['email']
-        pwd = serialized.init_data['password']
+        email = serialized.initial_data['email']
+        pwd = serialized.initial_data['password']
 
         user = None
         if User.objects.filter(email=email).count():
@@ -141,7 +141,7 @@ class UpdateResetPassword(APIView):
             return Response(status=status.HTTP_400_BAD_REQUEST) 
 
 
-class Login(AccessTokenView):
+class Login(TokenView):
 
     def post(self, request, username):
         if user_exists(username):
@@ -149,12 +149,12 @@ class Login(AccessTokenView):
             # Check if user is active
             if user.is_active is False:
                 return DjangoResponse('User is not active',
-                                      status=status.HTTP_400_BAD_REQUEST)
+                                      status=status.HTTP_401_UNAUTHORIZED)
         # Check if the username in parameters metches the username in url
         # print("\npath username: {}".format(username))
         # print("\nparam username: {}".format(request.POST.get('username')))
         if username != request.POST.get('username'):
             # print('\nfail\n')
             return DjangoResponse('Mismatching usernames',
-                                  status=status.HTTP_400_BAD_REQUEST)
-        return super(AccessTokenView, self).post(request)
+                                  status=status.HTTP_401_UNAUTHORIZED)
+        return super().post(request)

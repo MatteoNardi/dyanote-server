@@ -31,11 +31,9 @@ def user_exists(username):
 
 def generate_activation_key(user):
     ''' Given a user, return a random string which can be used as an activation key'''
-    salt = hashlib.sha1(str(random.random())).hexdigest()[:5]
+    salt = hashlib.sha1(str(random.random()).encode()).hexdigest()[:5]
     email = user.email
-    if isinstance(email, unicode):
-        email = email.encode('utf-8')
-    return hashlib.sha1(salt+email).hexdigest()
+    return hashlib.sha1((salt+email).encode()).hexdigest()
 
 def setup_default_notes(user):
     ''' Given a user who has just subscribed, create a default set of notes for him. '''

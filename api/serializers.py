@@ -51,7 +51,7 @@ class PageSerializer(serializers.HyperlinkedModelSerializer):
     url = PageIdentityField(view_name='page-detail')
     author = serializers.HyperlinkedRelatedField(view_name='user-detail', read_only=True,
                                                  lookup_field='username')
-    parent = PageRelatedField(view_name='page-detail', required=False)
+    parent = PageRelatedField(view_name='page-detail', required=False, queryset=Page.objects.all())
     flags = serializers.SerializerMethodField('get_flags')
 
     class Meta:
